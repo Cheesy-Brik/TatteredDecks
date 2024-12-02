@@ -118,7 +118,10 @@ SMODS.Back{
 	loc_txt = {
 		name = "Tattered Magic Deck",
 		text ={
-			"Test Text",
+			"Gain 2 {C:attention}Eternal{} {C:tarot}Tarot{} cards",
+			"when {C:attention}Blind{} is selected",
+			"if there is no space for them,",
+			"they will go into your {C:attention}Joker{} slots",
 		},
     },
 	apply = function()
@@ -305,9 +308,10 @@ function Back:trigger_effect(args) -- Append trigger effect function
 	end
 
 	if self.name == "Tattered Magic Deck" and args.context == "setting_blind" then
+		local added_consumables = 0
 		for _ = 1, 2 do
 			local area = G.consumeables
-			if #area.cards >= area.config.card_limit then
+			if #area.cards + added_consumables >= area.config.card_limit then
 				area = G.jokers
 			end
 			if #area.cards >= area.config.card_limit then
@@ -333,6 +337,7 @@ function Back:trigger_effect(args) -- Append trigger effect function
 					break
 				end
 			end
+			added_consumables = added_consumables + 1
 			G.E_MANAGER:add_event(Event({
 				trigger = "after",
 				delay = 0.15,
