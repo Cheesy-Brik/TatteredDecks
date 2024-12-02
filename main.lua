@@ -313,28 +313,28 @@ function Back:trigger_effect(args) -- Append trigger effect function
 			local area = G.consumeables
 			if #area.cards + added_consumables >= area.config.card_limit then
 				area = G.jokers
-			end
-			if #area.cards >= area.config.card_limit then
-				area = G.jokers
-				local possible_cards = {}
-				for _, card in ipairs(area.cards) do 
-					if card.ability.set ~= "Tarot" then
-						possible_cards[#possible_cards+1] = card
-					end 
-				end
-				if #possible_cards > 0 then
-					G.E_MANAGER:add_event(Event({
-						trigger = "before",
-						delay = 0.25,
-						func = function()
-						local sliced_card = pseudorandom_element(possible_cards, pseudoseed("random_joker_kill"))
-						sliced_card:start_dissolve({HEX("8835e0")}, nil, 1.6)
-						play_sound('slice1', 0.96+math.random()*0.08)
-						return true
-						end
-					}))
-				else
-					break
+				if #area.cards + added_consumables >= area.config.card_limit then
+					local possible_cards = {}
+					for _, card in ipairs(area.cards) do 
+						if card.ability.set ~= "Tarot" then
+							possible_cards[#possible_cards+1] = card
+						end 
+					end
+					if #possible_cards > 0 then
+						added_consumables = added_consumables + 1
+						G.E_MANAGER:add_event(Event({
+							trigger = "before",
+							delay = 0.25,
+							func = function()
+							local sliced_card = pseudorandom_element(possible_cards, pseudoseed("random_joker_kill"))
+							sliced_card:start_dissolve({HEX("8835e0")}, nil, 1.6)
+							play_sound('slice1', 0.96+math.random()*0.08)
+							return true
+							end
+						}))
+					else
+						break
+					end
 				end
 			end
 			added_consumables = added_consumables + 1
