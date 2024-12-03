@@ -60,7 +60,7 @@ position = 'after'
 match_indent = true
 payload = '''
 if G.GAME.selected_back.effect.config.money_mult then
-    G.GAME.current_round.dollars = math.floor((G.GAME.current_round.dollars * G.GAME.selected_back.effect.config.money_mult + G.GAME.selected_back.effect.config.money_mult_min) * G.GAME.dollars) - G.GAME.dollars
+    G.GAME.current_round.dollars = math.ceil((G.GAME.current_round.dollars * G.GAME.selected_back.effect.config.money_mult + G.GAME.selected_back.effect.config.money_mult_min) * G.GAME.dollars) - G.GAME.dollars
 end
 '''
 

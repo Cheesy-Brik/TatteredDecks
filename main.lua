@@ -398,8 +398,6 @@ G.FUNCS.flip_b_sides = function ()
 	end
 end
 
-
-
 -- FUCKED UP PATCHES BELOW
 
 function custom_deck_select_page_deck()
