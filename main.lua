@@ -20,13 +20,22 @@ SMODS.Back{
 		text ={
 			"Start run with",
 			"{C:blue}#1#{} hands and {C:red}#2#{} discards",
-			"hands/discards reset every 8 antes"
+			"hands/discards reset every 8 antes",
+			"Extra {C:blue}Hands{} no longer earn money",
 		},
     },
 	loc_vars = function(self)
         return {
             vars = { self.config.hands+4, self.config.discards+3 }
         }
+	end,
+	apply = function()
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.modifiers.no_extra_hand_money = true
+				return true
+			end
+		}))
 	end,
 	omit = true
 }
