@@ -343,7 +343,7 @@ function Back:trigger_effect(args) -- Append trigger effect function
 				delay = 0.15,
 				func = function()	
 				local card = create_card('Tarot', area)
-				card.ability.eternal = true -- Hacky, should use :set_eternal() but it's incompat
+				SMODS.Stickers["eternal"]:apply(card, true)
 				card:add_to_deck()
 				area:emplace(card)
 				return true
