@@ -64,8 +64,19 @@ if G.GAME.selected_back.effect.config.money_mult then
 end
 '''
 
-# T.Nebula Deck
+# T.Magic Deck
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+pattern = '''G.jokers.cards[i]:calculate_joker({setting_blind = true, blind = G.GAME.round_resets.blind})
+            end'''
+position = 'after'
+match_indent = true
+payload = '''
+G.GAME.selected_back:trigger_effect({context = 'setting_blind'})
+'''
 
+# T.Nebula Deck
 [[patches]]
 [patches.pattern]
 target = 'card.lua'
@@ -89,15 +100,4 @@ if G.GAME.selected_back.effect.config.negative_planet_levels then
 end
 '''
 
-# T.Magic Deck
 
-[[patches]]
-[patches.pattern]
-target = 'functions/state_events.lua'
-pattern = '''G.jokers.cards[i]:calculate_joker({setting_blind = true, blind = G.GAME.round_resets.blind})
-            end'''
-position = 'after'
-match_indent = true
-payload = '''
-G.GAME.selected_back:trigger_effect({context = 'setting_blind'})
-'''
