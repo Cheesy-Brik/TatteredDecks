@@ -41,6 +41,22 @@ payload = '''
 G.GAME.selected_back:trigger_effect({context = 'ending_shop'})
 '''
 
+# T.Blue Deck
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+pattern = '''G.STATE = G.STATES.NEW_ROUND'''
+position = 'at'
+match_indent = true
+payload = '''
+if  G.GAME.selected_back.effect.config.infinite_hands and not (to_big(G.GAME.chips) >= to_big(G.GAME.blind.chips)) then
+    ease_chips(0)
+    ease_hands_played(1)
+else
+    G.STATE = G.STATES.NEW_ROUND
+end
+''' # Sketch?
+
 # T.Yellow Deck
 [[patches]]
 [patches.pattern]

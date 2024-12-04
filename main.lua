@@ -46,11 +46,14 @@ SMODS.Back{
 	key = "blue",
     atlas = "b_side_atlas",
 	pos = {x = 1, y = 0},
-	config = {b_side = true},
+	config = {b_side = true, hands = -3, infinite_hands = true},
 	loc_txt = {
 		name = "Tattered Blue Deck",
 		text ={
-			"Test Text",
+			"Infinite {C:blue}Hands{}",
+			"If Blind is not beaten with hand",
+			"{C:chips}Chips{} are reset",
+			"{C:inactive}(Unless blind is beaten)",
 		},
     },
 	apply = function()
@@ -267,7 +270,7 @@ SMODS.Atlas {
 }
 
 -- Auto add tattered decks
-for _, deck in ipairs({"red", "yellow", "magic", "nebula", "checkered"}) do
+for _, deck in ipairs({"red", "blue", "yellow", "magic", "nebula", "checkered"}) do
 	Tattered.add_b_side("b_" .. deck, "b_tattered_" .. deck)
 end
 
