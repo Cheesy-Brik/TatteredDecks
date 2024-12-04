@@ -51,12 +51,19 @@ SMODS.Back{
 		name = "Tattered Blue Deck",
 		text ={
 			"Infinite {C:blue}Hands{}",
-			"If Blind is not beaten with hand",
+			"If Blind is not beaten in 1 hand",
 			"{C:chips}Chips{} are reset",
-			"{C:inactive}(Unless blind is beaten)",
+			"Extra {C:blue}Hands{} no longer earn money",
+
 		},
     },
 	apply = function()
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.modifiers.no_extra_hand_money = true
+				return true
+			end
+		}))
 	end,
 	omit = true
 }
