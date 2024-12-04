@@ -33,3 +33,7 @@ Gain erternal tarot cards every blind, if you have no space they destroy jokers 
 Planet cards level up their respective hand more but level down a random hand
 ## Tattered Checkered Deck
 Played card's suits rotate everytime they are played
+
+# Dependancies
+* [Steamodded](https://github.com/Steamopollys/Steamodded)
+* [Galdur](https://github.com/Eremel/Galdur)
