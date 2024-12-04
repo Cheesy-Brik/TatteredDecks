@@ -49,7 +49,7 @@ pattern = '''G.STATE = G.STATES.NEW_ROUND'''
 position = 'at'
 match_indent = true
 payload = '''
-if  G.GAME.selected_back.effect.config.infinite_hands and not (to_big(G.GAME.chips) >= to_big(G.GAME.blind.chips)) then
+if  G.GAME.selected_back.effect.config.infinite_hands and not (G.GAME.chips >= G.GAME.blind.chips) then
     ease_chips(0)
     ease_hands_played(1)
 else
