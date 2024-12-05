@@ -73,7 +73,7 @@ SMODS.Back{
 	key = "yellow",
     atlas = "b_side_atlas",
 	pos = {x = 2, y = 0},
-	config = {b_side = true, money_mult = 0.1, money_mult_min = 1.0, no_interest = true},
+	config = {b_side = true, money_mult = 0.1, money_mult_min = 1.0, reroll_gain = 4, no_interest = true},
 	loc_txt = {
 		name = "Tattered Yellow Deck",
 		text ={
@@ -82,11 +82,12 @@ SMODS.Back{
 			"a multiplier where each",
 			"dollar adds {C:money}#1#X${}",
 			"Earn no {C:attention}Interest",
+			"Rerolls increase by {C:money}$#2#{} per roll",
 		},
     },
 	loc_vars = function(self)
         return {
-            vars = { self.config.money_mult }
+            vars = { self.config.money_mult, self.config.reroll_gain + 1}
         }
 	end,
 	apply = function()

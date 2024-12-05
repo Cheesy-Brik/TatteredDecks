@@ -80,6 +80,18 @@ if G.GAME.selected_back.effect.config.money_mult then
 end
 '''
 
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+pattern = '''if not skip_increment then G.GAME.current_round.reroll_cost_increase = G.GAME.current_round.reroll_cost_increase + 1 end'''
+position = 'after'
+match_indent = true
+payload = '''
+if not skip_increment and G.GAME.selected_back.effect.config.reroll_gain then 
+    G.GAME.current_round.reroll_cost_increase = G.GAME.current_round.reroll_cost_increase + G.GAME.selected_back.effect.config.reroll_gain
+end
+'''
+
 # T.Magic Deck
 [[patches]]
 [patches.pattern]
@@ -115,5 +127,3 @@ if G.GAME.selected_back.effect.config.negative_planet_levels then
     end
 end
 '''
-
-
