@@ -92,6 +92,29 @@ if not skip_increment and G.GAME.selected_back.effect.config.reroll_gain then
 end
 '''
 
+#T. Black Deck
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = '''if (self.ability.set == 'Planet' or (self.ability.set == 'Booster' and self.ability.name:find('Celestial'))) and #find_joker('Astronomer') > 0 then self.cost = 0 end'''
+position = 'after'
+match_indent = true
+payload = '''
+if G.GAME.selected_back and G.GAME.selected_back.effect.config.free_jokers and (self.ability.set == "Joker" or (self.ability.set == "Booster" and self.ability.name:find("Buffoon"))) then
+    self.cost = 0
+end
+'''
+
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+pattern = '''local hand_text_set = false''' # Above joker context
+position = 'after'
+match_indent = true
+payload = '''
+G.GAME.selected_back:trigger_effect({context = 'before_hand'})
+'''
+
 # T.Magic Deck
 [[patches]]
 [patches.pattern]

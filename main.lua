@@ -117,13 +117,21 @@ SMODS.Back{
 	key = "black",
     atlas = "b_side_atlas",
 	pos = {x = 4, y = 0},
-	config = {b_side = true},
+	config = {b_side = true, joker_slot = 3, free_jokers = true},
 	loc_txt = {
 		name = "Tattered Black Deck",
 		text ={
-			"Test Text",
+			"{C:attention}+#1#{} Joker slots",
+			"{C:attention}Jokers{} are {C:attention}free{}",
+			"Rightmost Joker is destroyed",
+			"when a {C:blue}Hand{} is played"
 		},
     },
+	loc_vars = function(self)
+        return {
+            vars = { self.config.joker_slot }
+        }
+	end,
 	apply = function()
 	end,
 	omit = true
@@ -278,7 +286,7 @@ SMODS.Atlas {
 }
 
 -- Auto add tattered decks
-for _, deck in ipairs({"red", "blue", "yellow", "magic", "nebula", "checkered"}) do
+for _, deck in ipairs({"red", "blue", "yellow", "black", "magic", "nebula", "checkered"}) do
 	Tattered.add_b_side("b_" .. deck, "b_tattered_" .. deck)
 end
 
@@ -366,6 +374,21 @@ function Back:trigger_effect(args) -- Append trigger effect function
 				SMODS.Stickers["eternal"]:apply(card, true)
 				card:add_to_deck()
 				area:emplace(card)
+				return true
+				end
+			}))
+		end
+	end
+
+	if self.name == "Tattered Black Deck" and args.context == "before_hand" then
+		if #G.jokers.cards > 0 then
+			local sliced_card = G.jokers.cards[#G.jokers.cards]
+			G.E_MANAGER:add_event(Event({
+				trigger = "before",
+				delay = 0.25,
+				func = function()
+				sliced_card:start_dissolve({HEX("000000")}, nil, 1.6)
+				play_sound('slice1', 0.96+math.random()*0.08)
 				return true
 				end
 			}))
