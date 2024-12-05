@@ -12,7 +12,7 @@
     "badge_colour": "1e334a",
     "badge_text_colour": "#f2efda",
     "display_name": "Tattered Decks",
-    "version": "1.0.0",
+    "version": "0.0.5~BETA",
     "dependencies": [
         {
             "id": "Steamodded",
