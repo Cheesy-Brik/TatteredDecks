@@ -7,6 +7,7 @@ Tattered.b_side_table = {}
 Tattered.add_b_side = function(deck_id, b_side_id)
 	Tattered.b_side_table[deck_id] = b_side_id; Tattered.b_side_table[b_side_id] = deck_id
 end
+
 -- Util
 
 function get_checkered_suit_rotation()
@@ -26,7 +27,7 @@ function find_in_list(list, target)
 		end
 	end
 	return nil
- end
+end
 
 -- Decks
 SMODS.Back{
@@ -59,7 +60,6 @@ SMODS.Back{
 	end,
 	omit = true
 }
-
 
 SMODS.Back{
 	name = "Tattered Blue Deck",
@@ -316,6 +316,7 @@ for _, deck in ipairs({"red", "blue", "yellow", "black", "magic", "nebula", "che
 	Tattered.add_b_side("b_" .. deck, "b_tattered_" .. deck)
 end
 
+-- Trigger Effects
 local back_trigger_effect = Back.trigger_effect
 function Back:trigger_effect(args) -- Append trigger effect function
 	back_trigger_effect(self, args) -- Run vanilla checks
@@ -422,6 +423,7 @@ function Back:trigger_effect(args) -- Append trigger effect function
 	end
 end
 
+-- B Sides animation
 G.FUNCS.flip_b_sides = function ()
 	play_sound("gong", 0.5,1.0)
 	for _, deck_area in ipairs(Galdur.run_setup.deck_select_areas) do

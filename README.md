@@ -5,10 +5,10 @@ B-Sides for Decks in Balatro that offer a tougher challenge, inspired by the tai
 
 ### Finished Decks:
 - [x] Tattered Red Deck
-- [x] Tattered Blue Deck
+- [-] Tattered Blue Deck
 - [x] Tattered Yellow Deck
 - [ ] Tattered Green Deck
-- [ ] Tattered Black Deck
+- [-] Tattered Black Deck
 - [x] Tattered Magic Deck
 - [x] Tattered Nebula Deck
 - [ ] Tattered Ghost Deck
