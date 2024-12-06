@@ -7,6 +7,26 @@ Tattered.b_side_table = {}
 Tattered.add_b_side = function(deck_id, b_side_id)
 	Tattered.b_side_table[deck_id] = b_side_id; Tattered.b_side_table[b_side_id] = deck_id
 end
+-- Util
+
+function get_checkered_suit_rotation()
+	local suits = {"Spades", "Hearts", "Clubs", "Diamonds"}
+	for i, v in ipairs(SMODS.Suits) do
+		if i < 5 then goto continue end
+		suits[#suits+1] = v.key
+		::continue::
+	end
+ 	return suits
+end
+
+function find_in_list(list, target)
+	for i, item in ipairs(list) do
+		if item == target then
+			return i
+		end
+	end
+	return nil
+ end
 
 -- Decks
 SMODS.Back{
@@ -194,9 +214,15 @@ SMODS.Back{
 			"Start run with",
 			"{C:attention}52{} {C:spades}Spades{} in deck",
 			"Played card's suits are rotated",
-			"{C:spades}Spades{}»{C:hearts}Hearts{}»{C:clubs}Clubs{}»{C:diamonds}Diamonds{}»{C:spades}Spades{}"
+			"{C:spades}Spades{}»{C:hearts}Hearts{}»{C:clubs}Clubs{}»{C:diamonds}Diamonds{}#1#»{C:spades}Spades{}"
 		},
     },
+	loc_vars = function ()
+		if #get_checkered_suit_rotation() > 4 then 
+			return {vars = { "»" .. table.concat(get_checkered_suit_rotation(), "»", 5) }}
+		end
+		return {vars = { "" }}
+	end,
 	apply = function()
 		G.E_MANAGER:add_event(Event({
 			func = function()
@@ -307,15 +333,15 @@ function Back:trigger_effect(args) -- Append trigger effect function
 				end
 			}))
 		end
+		local suits = get_checkered_suit_rotation()
 		for _, card in ipairs(G.play.cards) do
 			G.E_MANAGER:add_event(Event({
 				trigger = "after",
 				delay = 0.05,
-				func = function()	
-				if card.config.card.suit == "Spades" then card:change_suit("Hearts")
-				elseif card.config.card.suit == "Hearts" then card:change_suit("Clubs")
-				elseif card.config.card.suit == "Clubs" then card:change_suit("Diamonds")
-				elseif card.config.card.suit == "Diamonds" then card:change_suit("Spades") end
+				func = function()
+				local index = find_in_list(suits, card.config.card.suit)
+				if index == #suits then index = 0 end
+				card:change_suit(suits[index + 1])
 				return true
 				end
 			}))
