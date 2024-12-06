@@ -9,7 +9,6 @@ Tattered.add_b_side = function(deck_id, b_side_id)
 end
 
 -- Util
-
 function get_checkered_suit_rotation()
 	local suits = {"Spades", "Hearts", "Clubs", "Diamonds"}
 	for i, v in ipairs(SMODS.Suits) do
@@ -461,7 +460,6 @@ G.FUNCS.flip_b_sides = function ()
 end
 
 -- FUCKED UP PATCHES BELOW
-
 function custom_deck_select_page_deck()
     local page = deck_select_page_deck()
 	local button_area = page.nodes[1].nodes[2].nodes[1].nodes[1]
