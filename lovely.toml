@@ -30,17 +30,6 @@ if not G.GAME.selected_back.effect.config.static_plays or (G.GAME.round_resets.a
     G.GAME.current_round.hands_left = (math.max(1, G.GAME.round_resets.hands + G.GAME.round_bonus.next_hands))
 end'''
 
-[[patches]]
-[patches.pattern]
-target = 'functions/button_callbacks.lua'
-pattern = '''G.jokers.cards[i]:calculate_joker({ending_shop = true})
-      end'''
-position = 'after'
-match_indent = true
-payload = '''
-G.GAME.selected_back:trigger_effect({context = 'ending_shop'})
-'''
-
 # T.Blue Deck
 [[patches]]
 [patches.pattern]
