@@ -153,6 +153,22 @@ SMODS.Back{
 	end,
 	apply = function()
 	end,
+	trigger_effect = function(self, args)
+		if self.name == "Tattered Black Deck" and args.context == "before_hand" then
+			if #G.jokers.cards > 0 then
+				local sliced_card = G.jokers.cards[#G.jokers.cards]
+				G.E_MANAGER:add_event(Event({
+					trigger = "before",
+					delay = 0.25,
+					func = function()
+					sliced_card:start_dissolve({HEX("000000")}, nil, 1.6)
+					play_sound('slice1', 0.96+math.random()*0.08)
+					return true
+					end
+				}))
+			end
+		end
+	end,
 	omit = true
 }
 
@@ -172,6 +188,52 @@ SMODS.Back{
 		},
     },
 	apply = function()
+	end,
+	trigger_effect = function(self, args)
+		if args.context == "setting_blind" then
+			local added_consumables = 0
+			for _ = 1, 2 do
+				local area = G.consumeables
+				if #area.cards + added_consumables >= area.config.card_limit then
+					area = G.jokers
+					if #area.cards + added_consumables >= area.config.card_limit then
+						local possible_cards = {}
+						for _, card in ipairs(area.cards) do 
+							if card.ability.set ~= "Tarot" then
+								possible_cards[#possible_cards+1] = card
+							end 
+						end
+						if #possible_cards > 0 then
+							added_consumables = added_consumables + 1
+							G.E_MANAGER:add_event(Event({
+								trigger = "before",
+								delay = 0.25,
+								func = function()
+								local sliced_card = pseudorandom_element(possible_cards, pseudoseed("random_joker_kill"))
+								sliced_card:start_dissolve({HEX("8835e0")}, nil, 1.6)
+								play_sound('slice1', 0.96+math.random()*0.08)
+								return true
+								end
+							}))
+						else
+							break
+						end
+					end
+				end
+				added_consumables = added_consumables + 1
+				G.E_MANAGER:add_event(Event({
+					trigger = "after",
+					delay = 0.15,
+					func = function()	
+					local card = create_card('Tarot', area)
+					SMODS.Stickers["eternal"]:apply(card, true)
+					card:add_to_deck()
+					area:emplace(card)
+					return true
+					end
+				}))
+			end
+		end
 	end,
 	omit = true
 }
@@ -231,6 +293,49 @@ SMODS.Back{
 				return true
 			end
 		}))
+	end,
+	trigger_effect = function(self, args)
+		if args.context == "final_scoring_step" then
+			for i, card in ipairs(G.play.cards) do
+				local percent = 1.15 - (i-0.999)/(#G.play.cards-0.998)*0.3
+				G.E_MANAGER:add_event(Event({
+					trigger = "after",
+					delay = 0.05,
+					func = function()	
+					card:flip()
+					play_sound("card1", percent)
+					card:juice_up(0.3, 0.3)
+					return true
+					end
+				}))
+			end
+			local suits = get_checkered_suit_rotation()
+			for _, card in ipairs(G.play.cards) do
+				G.E_MANAGER:add_event(Event({
+					trigger = "after",
+					delay = 0.05,
+					func = function()
+					local index = find_in_list(suits, card.config.card.suit)
+					if index == #suits then index = 0 end
+					card:change_suit(suits[index + 1])
+					return true
+					end
+				}))
+			end
+			for i, card in ipairs(G.play.cards) do
+				local percent = 1.15 - (i-0.999)/(#G.play.cards-0.998)*0.3
+				G.E_MANAGER:add_event(Event({
+					trigger = "after",
+					delay = 0.05,
+					func = function()	
+					card:flip()
+					play_sound("card1", percent)
+					card:juice_up(0.3, 0.3)
+					return true
+					end
+				}))
+			end
+		end
 	end,
 	omit = true
 }
@@ -313,113 +418,6 @@ SMODS.Atlas {
 -- Auto add tattered decks
 for _, deck in ipairs({"red", "blue", "yellow", "black", "magic", "nebula", "checkered"}) do
 	Tattered.add_b_side("b_" .. deck, "b_tattered_" .. deck)
-end
-
--- Trigger Effects
-local back_trigger_effect = Back.trigger_effect
-function Back:trigger_effect(args) -- Append trigger effect function
-	back_trigger_effect(self, args) -- Run vanilla checks
-	if self.name == "Tattered Checkered Deck" and args.context == "final_scoring_step" then
-		for i, card in ipairs(G.play.cards) do
-			local percent = 1.15 - (i-0.999)/(#G.play.cards-0.998)*0.3
-			G.E_MANAGER:add_event(Event({
-				trigger = "after",
-				delay = 0.05,
-				func = function()	
-				card:flip()
-				play_sound("card1", percent)
-				card:juice_up(0.3, 0.3)
-				return true
-				end
-			}))
-		end
-		local suits = get_checkered_suit_rotation()
-		for _, card in ipairs(G.play.cards) do
-			G.E_MANAGER:add_event(Event({
-				trigger = "after",
-				delay = 0.05,
-				func = function()
-				local index = find_in_list(suits, card.config.card.suit)
-				if index == #suits then index = 0 end
-				card:change_suit(suits[index + 1])
-				return true
-				end
-			}))
-		end
-		for i, card in ipairs(G.play.cards) do
-			local percent = 1.15 - (i-0.999)/(#G.play.cards-0.998)*0.3
-			G.E_MANAGER:add_event(Event({
-				trigger = "after",
-				delay = 0.05,
-				func = function()	
-				card:flip()
-				play_sound("card1", percent)
-				card:juice_up(0.3, 0.3)
-				return true
-				end
-			}))
-		end
-	end
-
-	if self.name == "Tattered Magic Deck" and args.context == "setting_blind" then
-		local added_consumables = 0
-		for _ = 1, 2 do
-			local area = G.consumeables
-			if #area.cards + added_consumables >= area.config.card_limit then
-				area = G.jokers
-				if #area.cards + added_consumables >= area.config.card_limit then
-					local possible_cards = {}
-					for _, card in ipairs(area.cards) do 
-						if card.ability.set ~= "Tarot" then
-							possible_cards[#possible_cards+1] = card
-						end 
-					end
-					if #possible_cards > 0 then
-						added_consumables = added_consumables + 1
-						G.E_MANAGER:add_event(Event({
-							trigger = "before",
-							delay = 0.25,
-							func = function()
-							local sliced_card = pseudorandom_element(possible_cards, pseudoseed("random_joker_kill"))
-							sliced_card:start_dissolve({HEX("8835e0")}, nil, 1.6)
-							play_sound('slice1', 0.96+math.random()*0.08)
-							return true
-							end
-						}))
-					else
-						break
-					end
-				end
-			end
-			added_consumables = added_consumables + 1
-			G.E_MANAGER:add_event(Event({
-				trigger = "after",
-				delay = 0.15,
-				func = function()	
-				local card = create_card('Tarot', area)
-				SMODS.Stickers["eternal"]:apply(card, true)
-				card:add_to_deck()
-				area:emplace(card)
-				return true
-				end
-			}))
-		end
-	end
-
-	if self.name == "Tattered Black Deck" and args.context == "before_hand" then
-		if #G.jokers.cards > 0 then
-			local sliced_card = G.jokers.cards[#G.jokers.cards]
-			G.E_MANAGER:add_event(Event({
-				trigger = "before",
-				delay = 0.25,
-				func = function()
-				sliced_card:start_dissolve({HEX("000000")}, nil, 1.6)
-				play_sound('slice1', 0.96+math.random()*0.08)
-				return true
-				end
-			}))
-		end
-	end
 end
 
 -- B Sides animation
